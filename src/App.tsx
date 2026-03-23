@@ -3,24 +3,33 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, RotateCcw, ChevronRight, Timer, Trophy, Info, BookOpen } from 'lucide-react';
-import { characters, Character } from './data';
+import { Play, RotateCcw, ChevronRight, Timer, Trophy, Info, BookOpen, Layers } from 'lucide-react';
+import { levels, Character, Level } from './data';
 
-type GameState = 'START' | 'PLAYING' | 'REVEAL' | 'FINISHED';
+type GameState = 'START' | 'LEVEL_SELECT' | 'PLAYING' | 'REVEAL' | 'FINISHED';
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState>('START');
+  const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
   const [scores, setScores] = useState({ teamA: 0, teamB: 0 });
 
+  const characters = selectedLevel?.characters || [];
   const currentCharacter = characters[currentIndex];
 
-  const startGame = () => {
+  const goToLevelSelect = () => {
+    setGameState('LEVEL_SELECT');
+  };
+
+  const startLevel = (level: Level) => {
+    setSelectedLevel(level);
+    setCurrentIndex(0);
     setGameState('PLAYING');
     setTimeLeft(30);
+    setScores({ teamA: 0, teamB: 0 });
   };
 
   const revealAnswer = () => {
@@ -40,6 +49,7 @@ export default function App() {
   const resetGame = () => {
     setCurrentIndex(0);
     setGameState('START');
+    setSelectedLevel(null);
     setScores({ teamA: 0, teamB: 0 });
   };
 
@@ -103,16 +113,47 @@ export default function App() {
             </div>
 
             <button
-              onClick={startGame}
+              onClick={goToLevelSelect}
               className="bg-olive text-white px-12 py-4 rounded-full text-xl font-medium hover:scale-105 transition-transform flex items-center gap-3 mx-auto shadow-lg"
             >
               <Play className="w-6 h-6 fill-current" />
-              Начать игру
+              Выбрать уровень
             </button>
           </motion.div>
         )}
 
-        {gameState === 'PLAYING' && (
+        {gameState === 'LEVEL_SELECT' && (
+          <motion.div
+            key="level-select"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            className="w-full max-w-5xl text-center"
+          >
+            <h2 className="text-4xl md:text-6xl font-bold mb-12 text-olive">Выберите уровень сложности</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {levels.map((level) => (
+                <button
+                  key={level.id}
+                  onClick={() => startLevel(level)}
+                  className="group p-8 bg-white rounded-[32px] shadow-sm border border-gray-100 hover:border-olive hover:shadow-xl transition-all text-left relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Layers className="w-16 h-16 text-olive" />
+                  </div>
+                  <div className="text-xs uppercase tracking-widest text-gray-400 mb-2">{level.difficulty}</div>
+                  <h3 className="text-2xl font-bold text-olive mb-4">{level.title}</h3>
+                  <p className="text-sm text-gray-500 mb-6">15 уникальных имен библейских героев.</p>
+                  <div className="flex items-center text-olive font-bold gap-2">
+                    Начать <ChevronRight className="w-4 h-4" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {gameState === 'PLAYING' && currentCharacter && (
           <motion.div
             key="playing"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -122,7 +163,7 @@ export default function App() {
           >
             <div className="mb-8 flex justify-between items-center">
               <div className="text-olive font-medium text-lg">
-                Вопрос {currentIndex + 1} из {characters.length}
+                {selectedLevel?.title}: {currentIndex + 1} из {characters.length}
               </div>
               <div className={`flex items-center gap-2 text-2xl font-bold ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-olive'}`}>
                 <Timer className="w-6 h-6" />
@@ -168,7 +209,7 @@ export default function App() {
           </motion.div>
         )}
 
-        {gameState === 'REVEAL' && (
+        {gameState === 'REVEAL' && currentCharacter && (
           <motion.div
             key="reveal"
             initial={{ opacity: 0, y: 20 }}
@@ -250,7 +291,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* Footer Progress */}
-      {gameState !== 'START' && gameState !== 'FINISHED' && (
+      {gameState !== 'START' && gameState !== 'LEVEL_SELECT' && gameState !== 'FINISHED' && (
         <div className="fixed bottom-8 left-0 w-full px-8">
           <div className="max-w-4xl mx-auto flex gap-2">
             {characters.map((_, idx) => (
