@@ -130,7 +130,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white rounded-[40px] p-12 md:p-24 shadow-xl border border-gray-100 relative overflow-hidden">
+            <div className="bg-white rounded-3xl md:rounded-[40px] p-6 md:p-24 shadow-xl border border-gray-100 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-2 bg-gray-100">
                 <motion.div 
                   className="h-full bg-olive"
@@ -140,26 +140,26 @@ export default function App() {
                 />
               </div>
               
-              <h2 className="text-7xl md:text-9xl font-bold tracking-[0.2em] text-olive mb-8 uppercase">
+              <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-widest text-olive mb-8 uppercase break-words">
                 {currentCharacter.scrambled}
               </h2>
               
-              <div className="flex justify-center gap-4 mt-12">
+              <div className="flex flex-wrap justify-center gap-3 mt-8 md:mt-12">
                 <button
                   onClick={() => addPoint('teamA')}
-                  className="px-6 py-2 border border-olive text-olive rounded-full hover:bg-olive hover:text-white transition-colors"
+                  className="flex-1 min-w-[140px] px-4 py-3 border border-olive text-olive rounded-full hover:bg-olive hover:text-white transition-colors text-sm md:text-base"
                 >
                   Команда А +1
                 </button>
                 <button
                   onClick={revealAnswer}
-                  className="px-8 py-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
+                  className="flex-1 min-w-[140px] px-4 py-3 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors text-sm md:text-base"
                 >
                   Показать ответ
                 </button>
                 <button
                   onClick={() => addPoint('teamB')}
-                  className="px-6 py-2 border border-olive text-olive rounded-full hover:bg-olive hover:text-white transition-colors"
+                  className="flex-1 min-w-[140px] px-4 py-3 border border-olive text-olive rounded-full hover:bg-olive hover:text-white transition-colors text-sm md:text-base"
                 >
                   Команда Б +1
                 </button>
@@ -176,37 +176,37 @@ export default function App() {
             exit={{ opacity: 0, y: -20 }}
             className="w-full max-w-4xl"
           >
-            <div className="bg-white rounded-[40px] p-8 md:p-16 shadow-xl border border-gray-100">
+            <div className="bg-white rounded-3xl md:rounded-[40px] p-6 md:p-16 shadow-xl border border-gray-100">
               <div className="flex items-center gap-4 text-olive mb-6">
                 <BookOpen className="w-6 h-6" />
                 <span className="uppercase tracking-widest text-sm font-bold">Правильный ответ</span>
               </div>
               
-              <h2 className="text-6xl md:text-8xl font-bold text-olive mb-8">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-olive mb-8 break-words">
                 {currentCharacter.name}
               </h2>
               
               <div className="h-px bg-gray-100 w-full mb-8" />
               
-              <p className="text-2xl md:text-3xl italic text-gray-700 leading-relaxed mb-12">
+              <p className="text-xl md:text-3xl italic text-gray-700 leading-relaxed mb-12">
                 «{currentCharacter.fact}»
               </p>
 
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="flex gap-8">
                   <div className="text-center">
-                    <div className="text-xs uppercase tracking-widest text-gray-400 mb-1">Команда А</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">Команда А</div>
                     <div className="text-3xl font-bold text-olive">{scores.teamA}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xs uppercase tracking-widest text-gray-400 mb-1">Команда Б</div>
+                    <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">Команда Б</div>
                     <div className="text-3xl font-bold text-olive">{scores.teamB}</div>
                   </div>
                 </div>
 
                 <button
                   onClick={nextSlide}
-                  className="bg-olive text-white px-8 py-4 rounded-full text-lg font-medium hover:scale-105 transition-transform flex items-center gap-2 shadow-lg"
+                  className="w-full md:w-auto bg-olive text-white px-8 py-4 rounded-full text-lg font-medium hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg"
                 >
                   {currentIndex < characters.length - 1 ? 'Следующий герой' : 'Завершить игру'}
                   <ChevronRight className="w-5 h-5" />
